@@ -8,14 +8,24 @@ OPTIMIZATION = -O1
 
 #########################################################################
 
-SRC=$(wildcard core/*.c *.c) 
+SRC=$(wildcard core/*.c usb/*.c *.c) \
+	STM32_USB_Device_Library/Core/src/usbd_core.c \
+	STM32_USB_Device_Library/Core/src/usbd_req.c \
+	STM32_USB_Device_Library/Core/src/usbd_ioreq.c \
+	STM32_USB_Device_Library/Class/cdc/src/usbd_cdc_core.c \
+	STM32_USB_OTG_Driver/src/usb_core.c \
+	STM32_USB_OTG_Driver/src/usb_dcd.c \
+	STM32_USB_OTG_Driver/src/usb_dcd_int.c 
 ASRC=$(wildcard core/*.s)
 OBJECTS= $(SRC:.c=.o) $(ASRC:.s=.o)
 LSTFILES= $(SRC:.c=.lst)
-HEADERS=$(wildcard core/*.h *.h)
+HEADERS=$(wildcard core/*.h usb/*.h *.h)
 
 #  Compiler Options
-GCFLAGS = -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb $(OPTIMIZATION) -I. -Icore -Wl,--gc-sections -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER -nostdlib
+GCFLAGS = -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,--gc-sections -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER -nostdlib
+GCFLAGS+=-ISTM32_USB_Device_Library/Class/cdc/inc
+GCFLAGS+=-ISTM32_USB_OTG_Driver/inc
+GCFLAGS+=-ISTM32_USB_Device_Library/Core/inc
 # Warnings
 GCFLAGS += -Wstrict-prototypes -Wundef -Wall -Wextra -Wunreachable-code  
 # Optimizazions
@@ -28,6 +38,7 @@ GCFLAGS+= -ISTM32F4_drivers/inc
 
 LDFLAGS = -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -nostartfiles --gc-sections  -T$(LSCRIPT) 
 LDFLAGS+= -LSTM32F4_drivers/build -lSTM32F4xx_drivers
+#LDFLAGS+= -LSTM32_USB_OTG_Driver/build -lSTM32_USB_OTG_Driver
 
 
 #  Compiler/Assembler Paths
@@ -39,14 +50,15 @@ SIZE = arm-none-eabi-size
 
 #########################################################################
 
+#all: STM32_USB_OTG_Driver/build/libSTM32_USB_OTG_Driver.a STM32F4_drivers/build/libSTM32F4_drivers.a $(PROJECT).bin Makefile stats
 all: STM32F4_drivers/build/libSTM32F4_drivers.a $(PROJECT).bin Makefile stats
 #	arm-none-eabi-objdump -d $(PROJECT).elf > out.dump
 
 STM32F4_drivers/build/libSTM32F4_drivers.a:
 	make -C STM32F4_drivers/build
 
-tools/stm32flash:
-	make -C tools
+STM32_USB_OTG_Driver/build/libSTM32_USB_OTG_Driver.a:
+	make -C STM32_USB_OTG_Driver/build
 
 $(PROJECT).bin: $(PROJECT).elf Makefile
 	$(OBJCOPY) -R .stack -O binary $(PROJECT).elf $(PROJECT).bin
@@ -63,7 +75,7 @@ clean:
 	$(REMOVE) $(PROJECT).bin
 	$(REMOVE) $(PROJECT).elf
 	make -C STM32F4_drivers/build clean
-	make -C tools clean
+	make -C STM32_USB_OTG_Driver/build clean
 
 #########################################################################
 
