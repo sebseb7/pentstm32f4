@@ -22,7 +22,7 @@ LSTFILES= $(SRC:.c=.lst)
 HEADERS=$(wildcard core/*.h usb/*.h *.h)
 
 #  Compiler Options
-GCFLAGS = -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,--fc-sections -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER -nostdlib
+GCFLAGS = -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,-gc-sections -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER -nostdlib
 GCFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 GCFLAGS+=-ISTM32_USB_Device_Library/Class/cdc/inc
 GCFLAGS+=-ISTM32_USB_OTG_Driver/inc
@@ -30,14 +30,14 @@ GCFLAGS+=-ISTM32_USB_Device_Library/Core/inc
 # Warnings
 GCFLAGS += -Wstrict-prototypes -Wundef -Wall -Wextra -Wunreachable-code  
 # Optimizazions
-GCFLAGS += -fsingle-precision-constant -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -fno-builtin -ffunction-sections -fdata-sections -fno-common -fdata-sections -ffunction-sections
+GCFLAGS += -fsingle-precision-constant -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -fno-builtin -ffunction-sections -fno-common -fdata-sections 
 # Debug stuff
 GCFLAGS += -Wa,-adhlns=$(<:.c=.lst),-gstabs -g 
 
 GCFLAGS+= -ISTM32F4_drivers/inc
 
 
-LDFLAGS = -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -nostartfiles -T$(LSCRIPT) 
+LDFLAGS = -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -nostartfiles -gc-sections -T$(LSCRIPT) 
 LDFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 LDFLAGS+= -LSTM32F4_drivers/build -lSTM32F4xx_drivers -lm
 #LDFLAGS+= -LSTM32_USB_OTG_Driver/build -lSTM32_USB_OTG_Driver
