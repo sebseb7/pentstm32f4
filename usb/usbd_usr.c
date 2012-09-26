@@ -122,7 +122,7 @@ void USBD_USR_Init(void)
 * @param  speed : device speed
 * @retval None
 */
-void USBD_USR_DeviceReset(uint8_t speed )
+void USBD_USR_DeviceReset(uint8_t __attribute__((__unused__)) speed )
 {
 }
 

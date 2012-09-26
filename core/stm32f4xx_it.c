@@ -31,6 +31,7 @@
 #include "stm32f4xx_it.h"
 #include "usb_core.h"
 #include "usbd_core.h"
+#include "main.h"
 
 
 #include "usbd_cdc_core.h"

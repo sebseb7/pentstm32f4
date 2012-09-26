@@ -84,7 +84,7 @@ CDC_IF_Prop_TypeDef VCP_fops =
   */
 static uint16_t VCP_Init(void)
 {
-  NVIC_InitTypeDef NVIC_InitStructure;
+  //NVIC_InitTypeDef NVIC_InitStructure;
   
   /* EVAL_COM1 default configuration */
   /* EVAL_COM1 configured as follow:
@@ -120,7 +120,7 @@ static uint16_t VCP_DeInit(void)
   * @param  Len: Number of data to be sent (in bytes)
   * @retval Result of the opeartion (USBD_OK in all cases)
   */
-static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
+static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t __attribute__((__unused__)) Len)
 { 
   switch (Cmd)
   {
@@ -186,7 +186,10 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   * @param  Len: Number of data to be sent (in bytes)
   * @retval Result of the opeartion: USBD_OK if all operations are OK else VCP_FAIL
   */
-static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
+static uint16_t VCP_DataTx (
+	uint8_t* Buf __attribute__((__unused__)) , 
+	uint32_t __attribute__((__unused__)) Len
+)
 {
   if (linecoding.datatype == 7)
   {

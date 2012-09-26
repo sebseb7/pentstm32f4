@@ -92,7 +92,7 @@
 * @retval None
 */
 
-void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
+void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE __attribute__((__unused__)) *pdev)
 {
 #ifdef USE_STM3210C_EVAL
 
@@ -244,7 +244,7 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 * @param  None
 * @retval None
 */
-void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
+void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE __attribute__((__unused__)) *pdev)
 {
   NVIC_InitTypeDef NVIC_InitStructure; 
   

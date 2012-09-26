@@ -163,7 +163,7 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
 * @param  pdev: device instance
 * @retval status: status
 */
-USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev)
+USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE __attribute__((__unused__)) *pdev)
 {
   /* Software Init */
   
