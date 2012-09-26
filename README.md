@@ -1,10 +1,8 @@
-# PentSTM32-l1 
+# PentSTM32f4 
 
-a small template project to use with the stm32l1xx
-
-
-have a testboard with a STM32L151RB working
+a small template project to use with the stm32f4xx
 
 
-![pcb](/sebseb7/pentstm32l1/raw/master/eagle/pcb.png)
+
+
 
