@@ -52,24 +52,22 @@ SIZE = arm-none-eabi-size
 
 #########################################################################
 
-#all: STM32_USB_OTG_Driver/build/libSTM32_USB_OTG_Driver.a STM32F4_drivers/build/libSTM32F4_drivers.a $(PROJECT).bin Makefile stats
-all: STM32F4_drivers/build/libSTM32F4_drivers.a $(PROJECT).bin Makefile stats
-#	arm-none-eabi-objdump -d $(PROJECT).elf > out.dump
+all: STM32F4_drivers/build/libSTM32F4_drivers.a $(PROJECT).bin Makefile 
+	@$(SIZE) $(PROJECT).elf
 
 STM32F4_drivers/build/libSTM32F4_drivers.a:
-	make -C STM32F4_drivers/build
+	@make -C STM32F4_drivers/build
 
 STM32_USB_OTG_Driver/build/libSTM32_USB_OTG_Driver.a:
 	make -C STM32_USB_OTG_Driver/build
 
 $(PROJECT).bin: $(PROJECT).elf Makefile
-	$(OBJCOPY) -R .stack -O binary $(PROJECT).elf $(PROJECT).bin
+	@echo "generating $(PROJECT).bin"
+	@$(OBJCOPY) -R .stack -O binary $(PROJECT).elf $(PROJECT).bin
 
 $(PROJECT).elf: $(OBJECTS) Makefile
-	$(GCC) $(OBJECTS) $(LDFLAGS)  -o $(PROJECT).elf
-
-stats: $(PROJECT).elf Makefile
-	$(SIZE) $(PROJECT).elf
+	@echo "  LD $(PROJECT).elf"
+	@$(GCC) $(OBJECTS) $(LDFLAGS)  -o $(PROJECT).elf
 
 clean:
 	$(REMOVE) $(OBJECTS)
@@ -82,12 +80,18 @@ clean:
 #########################################################################
 
 %.o: %.c Makefile $(HEADERS)
-	$(GCC) $(GCFLAGS) -o $@ -c $<
+	@echo "  GCC $<"
+	@$(GCC) $(GCFLAGS) -o $@ -c $<
 
 %.o: %.s Makefile 
-	$(AS) $(ASFLAGS) -o $@  $< 
+	@echo "  AS $<"
+	@$(AS) $(ASFLAGS) -o $@  $< 
 
 #########################################################################
 
 flash: all
 	./dfu-util -a 0 -s 0x08000000 -D $(PROJECT).bin -R
+
+
+
+.PHONY : clean all flash

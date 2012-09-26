@@ -47,11 +47,12 @@ OBJS = $(SRCS:.c=.o)
 all: $(LIB)
 
 $(LIB): $(OBJS)
-	$(AR) -r $(LIB) $(OBJS)
-	$(RANLIB) $(LIB)
+	@$(AR) -r $(LIB) $(OBJS)
+	@$(RANLIB) $(LIB)
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c -o $@ $^
+	@echo "  GCC $^"
+	@$(CC) $(CFLAGS) -c -o $@ $^
 
 clean:
 	-rm -f $(OBJS)
