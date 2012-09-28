@@ -95,7 +95,11 @@
   */           
 
 #if !defined  (HSE_VALUE) 
+#ifdef DISCOVERY	
+  #define HSE_VALUE    ((uint32_t)8000000) /*!< Value of the External oscillator in Hz */
+#else
   #define HSE_VALUE    ((uint32_t)12000000) /*!< Value of the External oscillator in Hz */
+#endif
 #endif /* HSE_VALUE */
 
 /**

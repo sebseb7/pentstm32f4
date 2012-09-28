@@ -33,6 +33,11 @@ void TimingDelay_Decrement(void)
 	tick++;
 }
 
+#ifdef DISCOVERY	
+#warning buildForDisco
+#else
+#warning buildForSebsBoard
+#endif
 
 
 int main(void)
@@ -44,9 +49,11 @@ int main(void)
 	RCC_GetClocksFreq(&RCC_Clocks);
 	/* SysTick end of count event each 0.1ms */
 	SysTick_Config(RCC_Clocks.HCLK_Frequency / 10000);
-	
+#ifdef DISCOVERY	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
+#else
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-
+#endif
 
  
   USBD_Init(&USB_OTG_dev,
@@ -61,18 +68,31 @@ int main(void)
 
 
 
+#ifdef DISCOVERY	
+	GPIOD->MODER  |=    0x01<<(2*12) ; 
+	GPIOD->MODER  |=    0x01<<(2*13) ; 
+#else
 	GPIOB->MODER  |=    0x01<<(2*12) ; 
 	GPIOB->MODER  |=    0x01<<(2*13) ; 
-
+#endif
 	
 	while(1)
 	{
+#ifdef DISCOVERY	
+		GPIOD->ODR           |=       1<<12;
+		GPIOD->ODR           &=       ~(1<<13);
+		Delay(105);
+		GPIOD->ODR           &=       ~(1<<12);
+		GPIOD->ODR           |=       1<<13;
+		Delay(150);
+#else
 		GPIOB->ODR           |=       1<<12;
 		GPIOB->ODR           &=       ~(1<<13);
-		Delay(1055);
+		Delay(105);
 		GPIOB->ODR           &=       ~(1<<12);
 		GPIOB->ODR           |=       1<<13;
-		Delay(1500);
+		Delay(150);
+#endif
 	}
 
 }

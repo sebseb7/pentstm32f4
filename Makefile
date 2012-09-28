@@ -24,6 +24,7 @@ HEADERS=$(wildcard core/*.h usb/*.h *.h)
 #  Compiler Options
 GCFLAGS = -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m4 -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,-gc-sections -DARM_MATH_CM4 -DUSE_STDPERIPH_DRIVER -nostdlib
 GCFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
+GCFLAGS+= -DDISCOVERY=1
 GCFLAGS+=-ISTM32_USB_Device_Library/Class/cdc/inc
 GCFLAGS+=-ISTM32_USB_OTG_Driver/inc
 GCFLAGS+=-ISTM32_USB_Device_Library/Core/inc
@@ -90,7 +91,7 @@ clean:
 #########################################################################
 
 flash: all
-	./dfu-util -a 0 -s 0x08000000 -D $(PROJECT).bin -R
+	dfu-util -a 0 -s 0x08000000 -D $(PROJECT).bin -R
 
 
 
