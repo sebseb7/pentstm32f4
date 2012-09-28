@@ -39,6 +39,8 @@ void TimingDelay_Decrement(void)
 #warning buildForSebsBoard
 #endif
 
+extern uint8_t  APP_Rx_Buffer []; 
+extern uint32_t APP_Rx_ptr_in;
 
 int main(void)
 {
@@ -78,6 +80,17 @@ int main(void)
 	
 	while(1)
 	{
+		//send a 'd' via USB:
+		
+		APP_Rx_Buffer[APP_Rx_ptr_in] = 0x64 ;
+		APP_Rx_ptr_in++;
+
+		/* To avoid buffer overflow */
+		if(APP_Rx_ptr_in >= APP_RX_DATA_SIZE)
+		{
+			APP_Rx_ptr_in = 0;
+		}  
+
 #ifdef DISCOVERY	
 		GPIOD->ODR           |=       1<<12;
 		GPIOD->ODR           &=       ~(1<<13);
