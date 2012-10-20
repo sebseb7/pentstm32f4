@@ -582,12 +582,16 @@ __attribute__( ( always_inline ) ) static __INLINE uint32_t __get_FPSCR(void)
 
     \param [in]    fpscr  Floating Point Status/Control value to set
  */
-__attribute__( ( always_inline ) ) static __INLINE void __set_FPSCR(uint32_t fpscr)
-{
 #if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+ __attribute__( ( always_inline ) ) static __INLINE void __set_FPSCR(uint32_t fpscr)
+{
   __ASM volatile ("VMSR fpscr, %0" : : "r" (fpscr) );
-#endif
 }
+#else
+ __attribute__( ( always_inline ) ) static __INLINE void __set_FPSCR(uint32_t fpscr __attribute__((unused)))
+{
+}
+#endif
 
 #endif /* (__CORTEX_M == 0x04) */
 
