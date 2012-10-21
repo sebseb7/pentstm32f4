@@ -200,13 +200,13 @@ static uint16_t VCP_DataTx (
     //APP_Rx_Buffer[APP_Rx_ptr_in] = USART_ReceiveData(EVAL_COM1);
   }
   
-  APP_Rx_ptr_in++;
+  //APP_Rx_ptr_in++;
   
   /* To avoid buffer overflow */
-  if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
-  {
-    APP_Rx_ptr_in = 0;
-  }  
+  //if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
+  //{
+  //  APP_Rx_ptr_in = 0;
+  //}  
   
   return USBD_OK;
 }
