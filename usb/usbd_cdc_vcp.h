@@ -30,7 +30,7 @@
 #define __USBD_CDC_VCP_H
 
 /* Includes ------------------------------------------------------------------*/
- #include "stm32f4xx.h"
+#include "stm32f2xx.h"
 
 #include "usbd_cdc_core.h"
 #include "usbd_conf.h"

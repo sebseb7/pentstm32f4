@@ -1,7 +1,7 @@
 PROJECT=template
 
 
-STM32F=4
+STM32F=2
 LSCRIPT=core/stm32f$(STM32F)xx_flash.ld
 
 OPTIMIZATION = -O1
@@ -16,6 +16,10 @@ endif
 
 SRC=$(wildcard usb/*.c *.c) \
 	core/stm32f$(STM32F)xx_it.c core/system_stm32f$(STM32F)xx.c \
+	STM32_USB_Device_Library/Core/src/usbd_core.c \
+	STM32_USB_Device_Library/Core/src/usbd_req.c \
+	STM32_USB_Device_Library/Core/src/usbd_ioreq.c \
+	STM32_USB_Device_Library/Class/cdc/src/usbd_cdc_core.c \
 	STM32_USB_OTG_Driver/src/usb_core.c \
 	STM32_USB_OTG_Driver/src/usb_dcd.c \
 	STM32_USB_OTG_Driver/src/usb_dcd_int.c 
@@ -25,7 +29,7 @@ LSTFILES= $(SRC:.c=.lst)
 HEADERS=$(wildcard core/*.h usb/*.h *.h)
 
 #  Compiler Options
-GCFLAGS = -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,-gc-sections -DARM_MATH_CM$(CORTEXM) -DUSE_STDPERIPH_DRIVER -nostdlib
+GCFLAGS = -DSTM32F=$(STM32F) -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,-gc-sections -DARM_MATH_CM$(CORTEXM) -DUSE_STDPERIPH_DRIVER -nostdlib
 ifeq ($(CORTEXM),4)
 GCFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 endif
@@ -48,8 +52,6 @@ ifeq ($(CORTEXM),4)
 LDFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 endif
 LDFLAGS+= -LSTM32F$(STM32F)_drivers/build -lSTM32F$(STM32F)xx_drivers -lm
-LDFLAGS+= -LSTM32_USB_Device_Library/build -lUSBCDC
-#LDFLAGS+= -LSTM32_USB_OTG_Driver/build -lSTM32_USB_OTG_Driver
 
 
 #  Compiler/Assembler Paths
@@ -66,9 +68,6 @@ all: STM32F$(STM32F)_drivers/build/libSTM32F$(STM32F)_drivers.a $(PROJECT).bin M
 
 STM32F$(STM32F)_drivers/build/libSTM32F$(STM32F)_drivers.a:
 	@make -C STM32F$(STM32F)_drivers/build
-
-STM32_USB_OTG_Driver/build/libSTM32_USB_OTG_Driver.a:
-	make -C STM32_USB_OTG_Driver/build
 
 $(PROJECT).bin: $(PROJECT).elf Makefile
 	@echo "generating $(PROJECT).bin"
