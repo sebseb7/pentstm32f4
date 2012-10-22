@@ -29,7 +29,12 @@
 #ifndef __USB_CONF__H__
 #define __USB_CONF__H__
 
- #include "stm32f2xx.h"
+#if STM32F == 2
+#include "stm32f2xx.h"
+#endif
+#if STM32F == 4
+#include "stm32f4xx.h"
+#endif
 
 
 /** @addtogroup USB_OTG_DRIVER

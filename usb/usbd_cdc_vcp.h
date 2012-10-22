@@ -30,7 +30,12 @@
 #define __USBD_CDC_VCP_H
 
 /* Includes ------------------------------------------------------------------*/
+#if STM32F == 2
 #include "stm32f2xx.h"
+#endif
+#if STM32F == 4
+#include "stm32f4xx.h"
+#endif
 
 #include "usbd_cdc_core.h"
 #include "usbd_conf.h"
