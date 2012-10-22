@@ -29,11 +29,11 @@ LSTFILES= $(SRC:.c=.lst)
 HEADERS=$(wildcard core/*.h usb/*.h *.h)
 
 #  Compiler Options
-GCFLAGS = -DSTM32F=$(STM32F) -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -Wl,-gc-sections -DARM_MATH_CM$(CORTEXM) -DUSE_STDPERIPH_DRIVER -nostdlib
+GCFLAGS = -DSTM32F=$(STM32F) -DUSE_USB_OTG_FS=1 -ffreestanding -std=gnu99 -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -I. -Icore -Iusb -DARM_MATH_CM$(CORTEXM) -DUSE_STDPERIPH_DRIVER 
 ifeq ($(CORTEXM),4)
 GCFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 endif
-GCFLAGS+= -DDISCOVERY=1
+#GCFLAGS+= -DDISCOVERY=1
 GCFLAGS+=-ISTM32_USB_Device_Library/Class/cdc/inc
 GCFLAGS+=-ISTM32_USB_OTG_Driver/inc
 GCFLAGS+=-ISTM32_USB_Device_Library/Core/inc
@@ -47,11 +47,11 @@ GCFLAGS += -Wa,-adhlns=$(<:.c=.lst),-gstabs -g
 GCFLAGS+= -ISTM32F$(STM32F)_drivers/inc
 
 
-LDFLAGS = -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -nostartfiles -gc-sections -T$(LSCRIPT) 
+LDFLAGS = -mcpu=cortex-m$(CORTEXM) -mthumb $(OPTIMIZATION) -nostartfiles -T$(LSCRIPT) 
 ifeq ($(CORTEXM),4)
 LDFLAGS+= -mfpu=fpv4-sp-d16 -mfloat-abi=hard 
 endif
-LDFLAGS+= -LSTM32F$(STM32F)_drivers/build -lSTM32F$(STM32F)xx_drivers -lm
+LDFLAGS+= -LSTM32F$(STM32F)_drivers/build -lSTM32F$(STM32F)xx_drivers -lm -lc -lnosys
 
 
 #  Compiler/Assembler Paths
