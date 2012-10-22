@@ -235,6 +235,38 @@ static float invSqrt(float x) {
 	return y;*/
 }
 
+void GetEulerAngles(float q0,float q1, float q2, float q3, float* yaw, float* pitch, float* roll)
+{
+	const double w2 = q0*q0;
+	const double x2 = q1*q1;
+	const double y2 = q2*q2;
+	const double z2 = q3*q3;
+	const double unitLength = w2 + x2 + y2 + z2;    // Normalised == 1, otherwise correction divisor.
+	const double abcd = q0*q1 + q2*q3;
+	const double eps = 1e-7;    // TODO: pick from your math lib instead of hardcoding.
+	const double pi = M_PI;
+	if (abcd > (0.5-eps)*unitLength)
+	{
+		*yaw = 2 * atan2(q2,q0);
+		*pitch = pi;
+		*roll = 0;
+	}
+	else if (abcd < (-0.5+eps)*unitLength)
+	{
+		*yaw = -2 * atan2(q2,q0);
+		*pitch = -pi;
+		*roll = 0;
+	}
+	else
+	{
+		const double adbc = q0*q3 - q1*q2;
+		const double acbd = q0*q2 - q1*q3;
+		*yaw = atan2(2*adbc, 1 - 2*(z2+x2));
+		*pitch = asin(2*abcd/unitLength);
+		*roll = atan2(2*acbd, 1 - 2*(y2+x2));
+	}
+}
+
 //====================================================================================================
 // END OF CODE
 //====================================================================================================
