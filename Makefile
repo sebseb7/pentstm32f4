@@ -15,6 +15,11 @@ endif
 #########################################################################
 
 SRC=$(wildcard usb/*.c *.c) \
+	lib/microsd_spi.c \
+	lib/ff.c \
+	lib/imu.c \
+	lib/fattime.c \
+	lib/i2c.c \
 	core/stm32f$(STM32F)xx_it.c core/system_stm32f$(STM32F)xx.c \
 	lib/usb_serial.c \
 	STM32_USB_Device_Library/Core/src/usbd_core.c \
