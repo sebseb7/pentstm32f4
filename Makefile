@@ -16,6 +16,7 @@ endif
 
 SRC=$(wildcard usb/*.c *.c) \
 	core/stm32f$(STM32F)xx_it.c core/system_stm32f$(STM32F)xx.c \
+	lib/usb_serial.c \
 	STM32_USB_Device_Library/Core/src/usbd_core.c \
 	STM32_USB_Device_Library/Core/src/usbd_req.c \
 	STM32_USB_Device_Library/Core/src/usbd_ioreq.c \
