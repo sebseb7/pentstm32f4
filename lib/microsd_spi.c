@@ -32,7 +32,12 @@
   POSSIBILITY OF SUCH DAMAGE. */
 
 
+#if STM32F == 2
 #include "stm32f2xx.h"
+#endif
+#if STM32F == 4
+#include "stm32f4xx.h"
+#endif
 #include "ffconf.h"
 #include "diskio.h"
 #include "main.h"

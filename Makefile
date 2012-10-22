@@ -1,7 +1,7 @@
 PROJECT=template
 
 
-STM32F=2
+STM32F=4
 LSCRIPT=core/stm32f$(STM32F)xx_flash.ld
 
 OPTIMIZATION = -O1

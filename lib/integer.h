@@ -8,7 +8,12 @@
 #include <windows.h>
 #else
 
+#if STM32F == 2
 #include "stm32f2xx.h"
+#endif
+#if STM32F == 4
+#include "stm32f4xx.h"
+#endif
 
 /* These types must be 16-bit, 32-bit or larger integer */
 typedef int				INT;
