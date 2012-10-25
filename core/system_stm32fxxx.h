@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    system_stm32f4xx.h
+  * @file    system_stm32fxxx.h
   * @author  MCD Application Team
   * @version V1.0.2
   * @date    05-March-2012
-  * @brief   CMSIS Cortex-M4 Device System Source File for STM32F4xx devices.  
+  * @brief   CMSIS Cortex-M4 Device System Source File for STM32Fxxx devices.  
   ******************************************************************************
   * @attention
   *
@@ -29,21 +29,21 @@
   * @{
   */
 
-/** @addtogroup stm32f4xx_system
+/** @addtogroup stm32fxxx_system
   * @{
   */  
   
 /**
   * @brief Define to prevent recursive inclusion
   */
-#ifndef __SYSTEM_STM32F4XX_H
-#define __SYSTEM_STM32F4XX_H
+#ifndef __SYSTEM_STM32FXXX_H
+#define __SYSTEM_STM32FXXX_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif 
 
-/** @addtogroup STM32F4xx_System_Includes
+/** @addtogroup STM32Fxxx_System_Includes
   * @{
   */
 
@@ -52,7 +52,7 @@
   */
 
 
-/** @addtogroup STM32F4xx_System_Exported_types
+/** @addtogroup STM32Fxxx_System_Exported_types
   * @{
   */
 
@@ -63,7 +63,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
   * @}
   */
 
-/** @addtogroup STM32F4xx_System_Exported_Constants
+/** @addtogroup STM32Fxxx_System_Exported_Constants
   * @{
   */
 
@@ -71,7 +71,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
   * @}
   */
 
-/** @addtogroup STM32F4xx_System_Exported_Macros
+/** @addtogroup STM32Fxxx_System_Exported_Macros
   * @{
   */
 
@@ -79,7 +79,7 @@ extern uint32_t SystemCoreClock;          /*!< System Clock Frequency (Core Cloc
   * @}
   */
 
-/** @addtogroup STM32F4xx_System_Exported_Functions
+/** @addtogroup STM32Fxxx_System_Exported_Functions
   * @{
   */
   
@@ -93,7 +93,7 @@ extern void SystemCoreClockUpdate(void);
 }
 #endif
 
-#endif /*__SYSTEM_STM32F4XX_H */
+#endif /*__SYSTEM_STM32FXXX_H */
 
 /**
   * @}
