@@ -28,7 +28,7 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_it.h"
+#include "stm32fxxx_it.h"
 #include "usb_core.h"
 #include "usbd_core.h"
 #include "main.h"
