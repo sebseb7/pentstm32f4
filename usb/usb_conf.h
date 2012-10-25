@@ -29,6 +29,9 @@
 #ifndef __USB_CONF__H__
 #define __USB_CONF__H__
 
+#if STM32F == 1
+#include "stm32f10x.h"
+#endif
 #if STM32F == 2
 #include "stm32f2xx.h"
 #endif

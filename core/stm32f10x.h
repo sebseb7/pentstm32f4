@@ -108,7 +108,7 @@
    In this case, these drivers will not be included and the application code will 
    be based on direct access to peripherals registers 
    */
-  /*#define USE_STDPERIPH_DRIVER*/
+  //#define USE_STDPERIPH_DRIVER*/
 #endif /* USE_STDPERIPH_DRIVER */
 
 /**
@@ -486,7 +486,7 @@ typedef enum IRQn
   */
 
 #include "core_cm3.h"
-#include "system_stm32f10x.h"
+#include "system_stm32fxxx.h"
 #include <stdint.h>
 
 /** @addtogroup Exported_types

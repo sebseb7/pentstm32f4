@@ -94,7 +94,7 @@
 
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE __attribute__((__unused__)) *pdev)
 {
-#ifdef USE_STM3210C_EVAL
+#if STM32F == 1
 
   RCC_OTGFSCLKConfig(RCC_OTGFSCLKSource_PLLVCO_Div3);
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_OTG_FS, ENABLE) ;

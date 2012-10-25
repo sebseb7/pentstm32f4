@@ -6,10 +6,10 @@ LSCRIPT=core/stm32f$(STM32F)xx_flash.ld
 
 OPTIMIZATION = -O0
 
-ifeq ($(STM32F),2)
-CORTEXM=3
-else
+ifeq ($(STM32F),4)
 CORTEXM=4
+else
+CORTEXM=3
 endif
 
 #########################################################################
@@ -49,7 +49,9 @@ GCFLAGS += -Wstrict-prototypes -Wundef -Wall -Wextra -Wunreachable-code
 GCFLAGS += -fsingle-precision-constant -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -fno-builtin -ffunction-sections -fno-common -fdata-sections 
 # Debug stuff
 GCFLAGS += -Wa,-adhlns=$(<:.c=.lst),-gstabs -g 
-
+ifeq ($(STM32F),1)
+GCFLAGS += -DSTM32F10X_CL=1 
+endif
 GCFLAGS+= -ISTM32F$(STM32F)_drivers/inc
 
 
