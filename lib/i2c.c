@@ -32,7 +32,7 @@ void Init_I2C1(void){
 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_I2C1); // SDA
 	
 	// configure I2C1 
-	I2C_InitStruct.I2C_ClockSpeed = 100000; 		// 100kHz
+	I2C_InitStruct.I2C_ClockSpeed = 400000; 		// 100kHz
 	I2C_InitStruct.I2C_Mode = I2C_Mode_I2C;			// I2C mode
 	I2C_InitStruct.I2C_DutyCycle = I2C_DutyCycle_2;	// 50% duty cycle --> standard
 	I2C_InitStruct.I2C_OwnAddress1 = 0x00;			// own address, not relevant in master mode
