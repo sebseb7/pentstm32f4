@@ -1,10 +1,10 @@
 PROJECT=template
 
 
-STM32F=4
+STM32F=2
 LSCRIPT=core/stm32f$(STM32F)xx_flash.ld
 
-OPTIMIZATION = -O1
+OPTIMIZATION = -O0
 
 ifeq ($(STM32F),2)
 CORTEXM=3
@@ -15,7 +15,7 @@ endif
 #########################################################################
 
 SRC=$(wildcard usb/*.c *.c) \
-	core/stm32f$(STM32F)xx_it.c core/system_stm32f$(STM32F)xx.c \
+	core/stm32fxxx_it.c core/system_stm32f$(STM32F)xx.c \
 	lib/usb_serial.c \
 	STM32_USB_Device_Library/Core/src/usbd_core.c \
 	STM32_USB_Device_Library/Core/src/usbd_req.c \

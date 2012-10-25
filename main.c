@@ -62,6 +62,7 @@ int main(void)
 
 	while(1)
 	{
+		usbprintf("sdfsdlkfsdjkl sdflksajdflkjsd sdlfkjsadlkfjsadl sldkafjsaldkfj sdlkfjsaldkjf sadlkfjsaldkfj sadlkfjasdlkjf \n",tick);
 		usbprintf("%i",tick);
 
 #ifdef DISCOVERY	
