@@ -6,11 +6,24 @@
 #include "lib/usb_serial.h"
 #include "lib/i2c.h"
 
-#define FAT_WRITE
-//#define USB_WRITE
 
-#define FREEIMU
-//#define MPU6150
+#include "usbd_cdc_core.h"
+#include "usbd_usr.h"
+#include "usb_conf.h"
+#include "usbd_desc.h"
+
+
+extern uint8_t  APP_Rx_Buffer []; 
+extern uint32_t APP_Rx_ptr_in;
+extern uint32_t APP_Rx_ptr_out;
+
+
+
+//#define FAT_WRITE
+#define USB_WRITE
+
+//#define FREEIMU
+#define MPU6150
 
 #ifdef MPU6150
 #include "mpu.h"
@@ -105,7 +118,11 @@ int main(void)
 #endif
 
 #ifdef MPU6150
+	//Delay(300);
 	MPU6050_Initialize();
+	//Delay(300);
+	MPU6050_Initialize2();
+	//Delay(300);
 	int16_t accXbuf[20];
 	int16_t accYbuf[20];
 	int16_t accZbuf[20];
@@ -143,6 +160,15 @@ int main(void)
 	sampleFreq = 72.53f;
 #endif
 #endif
+	q0 = 1.0f;
+	q1 = 0.0f;
+	q2 = 0.0f;
+	q3 = 0.0f;
+
+
+	uint8_t tock = 0;
+
+	uint32_t last_tick = tick;
 	while(1)
 	{
 
@@ -214,11 +240,17 @@ int main(void)
 
 #ifdef MPU6150
 		int16_t rawValues[6] = {0,0,0,0,0,0};
+		uint8_t FT[4] = {0,0,0,0};
 		MPU6050_GetRawAccelGyro(rawValues);
 
-		accXbuf[bufptr]=rawValues[0]-617;
-		accYbuf[bufptr]=rawValues[1]+548;
-		accZbuf[bufptr]=rawValues[2]+1500;
+		MPU6050_GetFT(FT);
+		rawValues[0]+=270;
+		rawValues[1]+=0;
+		rawValues[2]+=0;
+
+		accXbuf[bufptr]=rawValues[0];
+		accYbuf[bufptr]=rawValues[1];
+		accZbuf[bufptr]=rawValues[2];
 
 		bufptr++;
 		if(bufptr==16)
@@ -240,29 +272,51 @@ int main(void)
 		accY/=16;
 		accZ/=16;
 
-		rawValues[3]+=37;
-		rawValues[4]+=16;
-		rawValues[5]+=33;
+		//dev board
+		rawValues[3]+=52;
+		rawValues[4]-=5;
+		rawValues[5]-=25;
+		
+		//selfmade
+		//rawValues[3]+=31;
+		//rawValues[4]+=20;
+		//rawValues[5]+=32;
 
-		float gyroX_f = rawValues[3] / 875.0f;
-		float gyroY_f = rawValues[4] / 875.0f;
-		float gyroZ_f = rawValues[5] / 875.0f;
+		float gyroX_f = rawValues[3] / 835.0f;
+		float gyroY_f = rawValues[4] / 835.0f;
+		float gyroZ_f = rawValues[5] / 835.0f;
 
-		float accX_f = accX / 8000.0f;
-		float accY_f = accY / 8000.0f;
-		float accZ_f = accZ / 8000.0f;
+		float accX_f = accX / 2000.0f;
+		float accY_f = accY / 2000.0f;
+		float accZ_f = accZ / 2000.0f;
 		
 		MadgwickAHRSupdateIMU(gyroX_f,gyroY_f,gyroZ_f,accX_f,accY_f,accZ_f);
 		GetEulerAngles(q3,q2,q1,q0,&yaw,&pitch,&roll);
 
+		uint32_t interval = tick-last_tick;
+		last_tick = tick;
+		//Delay(8);
+		sampleFreq = 10000 / (float)interval;
+
 #ifdef USB_WRITE
-		usbprintf("%li A: %i %i %i G: %i %i %i Q: %f %f %f %f E: %f %f %f\n",
-			tick,
-			accX,accY,accZ,
-			rawValues[3],rawValues[4],rawValues[5],
-			q3,q2,q1,q0,
-			pitch*M_1_PI ,roll*M_1_PI ,yaw*M_1_PI
-		);
+		//usbprintf("%i %f A: %i %i %i G: %i %i %i Q: %f %f %f %f E: %f %f %f\n",
+		//GPIOD->ODR           |=       1<<12;
+		if(tock==0)
+		{
+			usbprintf("%i %f Q: %f %f %f %f\n",
+				tick,sampleFreq,
+				//accX,accY,accZ,
+				//rawValues[3],rawValues[4],rawValues[5],
+				q3,q2,q1,q0
+				//pitch*M_1_PI*180 ,roll*M_1_PI*180 ,yaw*M_1_PI*180
+			);
+		}
+		//GPIOD->ODR           &=       ~(1<<12);
+
+		MPU6050_ResetFIFOCount();
+		while(MPU6050_GetFIFOCount() == 0);
+
+
 #endif
 #ifdef FAT_WRITE
 		char line[256];
@@ -273,6 +327,7 @@ int main(void)
 			q3,q2,q1,q0,
 			pitch*M_1_PI ,roll*M_1_PI ,yaw*M_1_PI
 		);
+
 		uint bw=0;
 		f_write(&file, line, strlen(line), &bw);	
 
@@ -288,9 +343,17 @@ int main(void)
 #endif
 #endif
 
+		tock++;
 
-		GPIOB->ODR           ^=       1<<13;
-		Delay(8);
+		if(tock == 7)
+		{
+			tock=0;
+		}
+
+		if(tock==0)
+		{
+			GPIOB->ODR           ^=       1<<13;
+		}	
 	}
 
 }

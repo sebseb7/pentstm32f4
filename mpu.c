@@ -1,5 +1,6 @@
 #include "mpu.h"
 #include "main.h"
+#include "lib/i2c.h"
 
 /** @defgroup MPU6050_Library
  * @{
@@ -17,15 +18,37 @@
 #define TRUE 1
 #define FALSE 0
 
+// mpu 9150 registers http://www.invensense.com/mems/gyro/documents/RM-MPU-9150A-00.pdf
+
 void MPU6050_Initialize() 
 {
-	MPU6050_SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
-	MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_2000);
-	MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
 	MPU6050_SetSleepModeStatus(DISABLE); 
+	MPU6050_SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
+	MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+	MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x19,5);
+//	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x6b,1);
+	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1A,1);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_FIFO_EN, MPU6050_TEMP_FIFO_EN_BIT,FALSE);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_FIFO_EN, MPU6050_ACCEL_FIFO_EN_BIT,FALSE);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT,FALSE);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_FIFO_EN, MPU6050_YG_FIFO_EN_BIT,FALSE);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_FIFO_EN, MPU6050_ZG_FIFO_EN_BIT,TRUE);
+ 	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_FIFO_EN_BIT,TRUE);
+ 	//MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x23,0x78);
+//	MPU6050_WriteBits(MPU6050_ADDRESS, 0x6a, 6,1, 1);
+//	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1b,1<<3);
+//	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1c,3<<3);
+}
+void MPU6050_Initialize2() 
+{
+//	MPU6050_SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
+//	MPU6050_SetFullScaleGyroRange(MPU6050_GYRO_FS_2000);
+//	MPU6050_SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+//	MPU6050_SetSleepModeStatus(DISABLE); 
 //	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x19,0);
 //	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x6b,1);
-	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1A,6);
+//	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1A,6);
 //	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1b,1<<3);
 //	MPU6050_I2C_ByteWrite2(MPU6050_ADDRESS, 0x1c,3<<3);
 }
@@ -40,6 +63,14 @@ uint8_t MPU6050_TestConnection()
 		return TRUE;
 	else
 		return FALSE;
+}
+uint16_t MPU6050_GetFIFOCount() {
+	uint8_t buffer[2]={0,0};
+	MPU6050_I2C_BufferRead(MPU6050_ADDRESS, buffer, MPU6050_RA_FIFO_COUNTH, 2);
+	return (((uint16_t)buffer[0]) << 8) | buffer[1];
+}
+void MPU6050_ResetFIFOCount() {
+	MPU6050_WriteBit(MPU6050_ADDRESS, MPU6050_RA_USER_CTRL, MPU6050_USERCTRL_FIFO_RESET_BIT, TRUE);
 }
 // WHO_AM_I register
 
@@ -208,6 +239,10 @@ void MPU6050_GetRawAccelGyro(int16_t* AccelGyro)
 	for(int i=4; i<7; i++)
 		AccelGyro[i-1]=((int16_t)((uint16_t)tmpBuffer[2*i] << 8) + tmpBuffer[2*i+1]);        
 
+}
+void MPU6050_GetFT(uint8_t* FT) 
+{
+	MPU6050_I2C_BufferRead(MPU6050_ADDRESS, FT, 0x73, 1); 
 }
 
 /** Write multiple bits in an 8-bit device register.

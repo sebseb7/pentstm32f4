@@ -10,7 +10,8 @@
 
  /* Includes */
 
-#define MPU6050_ADDRESS 211
+#define MPU6050_ADDRESS 209
+//#define MPU6050_ADDRESS 211
 
 #define MPU6050_RA_XG_OFFS_TC       0x00 //[7] PWR_MODE, [6:1] XG_OFFS_TC, [0] OTP_BNK_VLD
 #define MPU6050_RA_YG_OFFS_TC       0x01 //[7] PWR_MODE, [6:1] YG_OFFS_TC, [0] OTP_BNK_VLD
@@ -363,7 +364,11 @@
 
 
 void MPU6050_Initialize(void);
+void MPU6050_Initialize2(void);
 uint8_t MPU6050_TestConnection(void);
+void MPU6050_GetFT(uint8_t* FT) ;
+uint16_t MPU6050_GetFIFOCount(void);
+void MPU6050_ResetFIFOCount(void);
 
 // GYRO_CONFIG register
 uint8_t MPU6050_GetFullScaleGyroRange(void);
